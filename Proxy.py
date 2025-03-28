@@ -135,6 +135,9 @@ while True:
     cacheFile.close()
     print ('Sent to the client:')
     print ('> ' + cacheData)
+    clientSocket.shutdown(socket.SHUT_WR)
+    clientSocket.close()
+    continue
   except:
     # cache miss.  Get resource from origin server
     originServerSocket = None
