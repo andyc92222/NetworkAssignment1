@@ -1,0 +1,21 @@
+#CACHE_TIME=1743194618
+#MAX_AGE=0
+HTTP/1.1 200 OK
+Date: Fri, 28 Mar 2025 20:43:39 GMT
+Content-Type: application/json
+Content-Length: 203
+Connection: close
+Server: gunicorn/19.9.0
+Cache-Control: public, max-age=0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+{
+  "args": {}, 
+  "headers": {
+    "Host": "httpbin.org", 
+    "X-Amzn-Trace-Id": "Root=1-67e709fb-27c644b94726b76e4d964485"
+  }, 
+  "origin": "175.35.140.144", 
+  "url": "http://httpbin.org/cache/0"
+}

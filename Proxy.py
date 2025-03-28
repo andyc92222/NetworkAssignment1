@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import re
+import time
 
 # 1MB buffer size
 BUFFER_SIZE = 1000000
@@ -112,8 +113,18 @@ while True:
     
     # Check wether the file is currently in the cache
     cacheFile = open(cacheLocation, "r")
-    cacheData = cacheFile.readlines()
+    cacheLines = cacheFile.readlines()
 
+    if cacheLines[0].startswith("#CACHE_TIME=") and cacheLines[1].startswith("#MAX_AGE="):
+        cache_time = int(cacheLines[0].strip().split("=")[1])
+        max_age = int(cacheLines[1].strip().split("=")[1])
+        age = int(time.time()) - cache_time
+
+        if max_age >= 0 and age > max_age:
+            raise Exception("Cache expired")
+        cacheData = cacheLines[2:]
+    else:
+        cacheData = cacheLines  # Fallback if metadata missing
     print ('Cache hit! Loading from cache file: ' + cacheLocation)
     # ProxyServer finds a cache hit
     # Send back response to client 
@@ -194,6 +205,13 @@ while True:
 
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
+      response_str = response.decode(errors="ignore")
+      match = re.search(r'Cache-Control:.*?max-age=(\d+)', response_str, re.IGNORECASE)
+      max_age = int(match.group(1)) if match else -1
+      timestamp = int(time.time())
+
+      metadata = f"#CACHE_TIME={timestamp}\n#MAX_AGE={max_age}\n"
+      cacheFile.write(metadata.encode())
       cacheFile.write(response)
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
