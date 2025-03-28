@@ -134,7 +134,7 @@ while True:
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
-    print ('> ' + cacheData)
+    print ('> ' , cacheData)
     clientSocket.shutdown(socket.SHUT_WR)
     clientSocket.close()
     continue
